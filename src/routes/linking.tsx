@@ -7,6 +7,9 @@ const config={
             parse:{
                 invitation:(invitation:any)=>`${invitation}`
             }
+        },
+        Main:{
+            path:"Services",
         }
     }
 }

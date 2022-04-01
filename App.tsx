@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, LogBox, Platform, StatusBar} from "react-native";
+import {Alert, Linking, LogBox, Platform, StatusBar,DeviceEventEmitter} from "react-native";
 import {Colors} from "react-native/Libraries/NewAppScreen";
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
@@ -25,16 +25,21 @@ export default function App() {
         [notification, setNotification]: any = useState(false),
         notificationListener: any = useRef(),
         responseListener: any = useRef();
-
+    const [screen,setScreen]=useState(0);
     useEffect(() => {
-        registerForPushNotificationsAsync().then((token: any) => setExpoPushToken(token));
+        registerForPushNotificationsAsync().then((token: any) => {setExpoPushToken(token);console.log("tokeno",token)});
 
         notificationListener.current = Notifications.addNotificationReceivedListener((notification: any) => {
             setNotification(notification);
+            setScreen(notification.request.content.data.screen)
+            
+            
         });
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            // console.log(response);
+            console.log("notificationResponse",response);
+            DeviceEventEmitter.emit("changeScreen",{screen:response.notification.request.content.data?response.notification.request.content.data.screen:0})
+            
         });
         linking.getInitialURL().then(data=>console.log("data_",data))
     
@@ -53,7 +58,7 @@ export default function App() {
     return (
         <>
             <StatusBar backgroundColor={Colors.primaryColor}/>
-            <Routes/>
+            <Routes screen={screen}/>
         </>
     )
 }

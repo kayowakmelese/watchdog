@@ -1,5 +1,5 @@
 import React from "react";
-import {ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, View,DeviceEventEmitter} from 'react-native'
 import Colors from "../utils/colors";
 import Footer from "../components/Footer";
 import Services from "../containers/main/Services/Services";
@@ -11,6 +11,8 @@ import ErrorModal from "../components/errorModal";
 import Home from "../containers/main/Home";
 import {addToSecureStore, getSecureStoreItem, removeSecureStoreItem} from "../utils/CommonFunction";
 import Transport from "../api/Transport";
+import * as linking from 'expo-linking'
+import jwtDecode from "jwt-decode";
 
 export interface Props {
     navigation: any
@@ -23,6 +25,8 @@ interface State {
     isLoading: boolean;
     currentTab: number;
     exit: boolean;
+    isDeepLink:boolean;
+    deepLinkScreen:number;
 }
 
 export default class Main extends React.Component<Props, State> {
@@ -35,7 +39,10 @@ export default class Main extends React.Component<Props, State> {
             modalVisible: false,
             isLoading: true,
             currentTab: 0,
-            exit: false
+            exit: false,
+            isDeepLink:false,
+            deepLinkScreen:0
+
         }
     }
 
@@ -51,7 +58,41 @@ export default class Main extends React.Component<Props, State> {
             this.setState({allFileSubmitted: true, isLoading: false})
         }
         await this.getUserProfile();
+        linking.addEventListener("url",(event)=>{
+            let data=linking.parse(event.url);
+            console.log("thisisdatar",JSON.stringify(data))
+            this.checkSigned();
+        })
+        // if(this.props.route && this.props.route.params!=null && this.props.route.params!=undefined){
+        //     if(this.props.route.params.screen){
+        //         this.setState({currentTab:this.props.route.params.screen})
+        //     }
+            
+        // console.log("routesxr",this.props.route.params)
+        // }
+        DeviceEventEmitter.addListener('changeScreen', (e) => {
+            this.setState({ currentTab: e.screen })
+            })
+        
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    async checkSigned(){
+        let secureStorage = await SecureStore.getItemAsync('isFirstTime')
+        let token: any = await SecureStore.getItemAsync('token')
+        if (secureStorage === 'True') {
+            if (token !== null) {
+                let decode: any = await jwtDecode(token)
+                if (decode.isVerified) {
+                    // this.props.navigation.navigate('Main')
+                    this.setState({isDeepLink:true});
+                    this.setState({currentTab:1})
+                } else {
+                    this.props.navigation.navigate('Auth')
+                }
+            } else {
+                this.props.navigation.navigate('Auth')
+            }
+        }
     }
 
     componentWillUnmount() {

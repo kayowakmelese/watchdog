@@ -32,7 +32,7 @@ interface State {
     index: number;
     canceled: boolean;
     showCounter: boolean;
-    moneyOffer: number;
+    moneyOffer: any;
 }
 
 export default class ServiceDetail extends React.Component<Props, State> {
@@ -80,9 +80,9 @@ export default class ServiceDetail extends React.Component<Props, State> {
         let SMS = '';
 
         if (Platform.OS === 'android') {
-            SMS = `sms:251994?body=This is a test message from the Watch Dogg`;
+            SMS = `sms:${this.props.route.params.offerDetail.profile.phoneNumber}?body=This is a test message from the Watch Dogg`;
         } else {
-            SMS = `sms:251994&body=This is a test message from the Watch Dogg?`;
+            SMS = `sms:${this.props.route.params.offerDetail.profile.phoneNumber}&body=This is a test message from the Watch Dogg?`;
         }
 
         Linking.openURL(SMS).then(r => {
@@ -90,7 +90,7 @@ export default class ServiceDetail extends React.Component<Props, State> {
     };
 
     render() {
-
+        console.log("params",this.props.route.params)
         const {offerDetail} = this.props.route.params,
             status = offerDetail.status.toLowerCase(),
             Services = Strings.services
@@ -135,8 +135,8 @@ export default class ServiceDetail extends React.Component<Props, State> {
                                         }}>
                                             <Counter
                                                 onValueEdited={(moneyOffer: number) => this.setState({moneyOffer})}
-                                                onLeftPress={() => this.setState({moneyOffer: this.state.moneyOffer - 25})}
-                                                onRightPress={() => this.setState({moneyOffer: this.state.moneyOffer + 25})}
+                                                onLeftPress={() => parseFloat(this.state.moneyOffer)-25>parseFloat(offerDetail.offer.replace('$ ',''))?this.setState({moneyOffer: parseFloat(this.state.moneyOffer) - 25}):null}
+                                                onRightPress={() => this.setState({moneyOffer: parseFloat(this.state.moneyOffer) + 25})}
                                                 label={this.state.moneyOffer}
                                                 style={{width: '90%'}}/>
 
@@ -178,7 +178,7 @@ export default class ServiceDetail extends React.Component<Props, State> {
                                              disabled={false}/>
                                      </>
                                  )
-                             }} center={false} style={{}}/>
+                             }} center={true} style={{}}/>
 
 
                 <SafeAreaView style={{backgroundColor: Colors.primaryColor, flex: 1,}}>
@@ -215,6 +215,7 @@ export default class ServiceDetail extends React.Component<Props, State> {
                                     value: offerDetail.offer
                                 },
                             ].map((service: any, idx: number) => {
+                                console.log("service",service)
                                 return (
                                     <View key={idx} style={{
                                         flexDirection: 'row',

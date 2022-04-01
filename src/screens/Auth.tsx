@@ -6,6 +6,8 @@ import Strings from "../utils/strings";
 import Login from "../containers/auth/Login";
 import SignUp from "../containers/auth/SignUp";
 import * as linking from 'expo-linking'
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 export interface Props {
     navigation: any
@@ -42,10 +44,28 @@ export default class Auth extends React.Component<Props, State> {
         linking.addEventListener("url",(event)=>{
             let data=linking.parse(event.url);
             console.log("thisisdata",JSON.stringify(data))
-            this.setState({isInvitation:true,invitationCode:data.queryParams.invitation})
-        })
+            this.checkSigned().finally(()=>{
+                this.setState({isInvitation:true,invitationCode:data.queryParams.invitation,isLogin:false})
+     
+            });
+              })
     }
-
+    async checkSigned(){
+        let secureStorage = await SecureStore.getItemAsync('isFirstTime')
+        let token: any = await SecureStore.getItemAsync('token')
+        if (secureStorage === 'True') {
+            if (token !== null) {
+                let decode: any = await jwtDecode(token)
+                if (decode.isVerified) {
+                    this.props.navigation.navigate('Main')
+                } else {
+                    // this.props.navigation.navigate('Auth')
+                }
+            } else {
+                // this.props.navigation.navigate('Auth')
+            }
+        }
+    }
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }

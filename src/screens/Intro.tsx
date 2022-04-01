@@ -10,7 +10,8 @@ import CustomModal from "../components/CustomModal";
 import jwtDecode from "jwt-decode";
 
 export interface Props {
-    navigation: any
+    navigation: any,
+    screen:any
 }
 
 interface State {
@@ -32,6 +33,7 @@ export default class Intro extends React.Component<Props, State> {
     };
 
     async UNSAFE_componentWillMount() {
+        console.log("params",this.props)
         let secureStorage = await SecureStore.getItemAsync('isFirstTime')
         let token: any = await SecureStore.getItemAsync('token')
         if (secureStorage === 'True') {

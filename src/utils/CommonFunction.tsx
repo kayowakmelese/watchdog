@@ -1,6 +1,7 @@
 import * as SecureStore from "expo-secure-store";
-import {AWSConfig} from "./constants";
+import {AWSConfig, Constants} from "./constants";
 import {RNS3} from 'react-native-aws3';
+import axios from "axios";
 
 export function checkEmail(email: string) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -60,4 +61,13 @@ export function camelize(text: string) {
         return camelize.replace(/\s/g, "")
     }
     return text.toLowerCase()
+}
+export async function changeToString(latitude:any,longitude:any){
+   let res=await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constants.GoogleApiKey}`)
+   if(res){
+       let cityName=res.data.results[0].formatted_address
+       return cityName;
+   }else{
+       return "unable to load city name";
+   }
 }

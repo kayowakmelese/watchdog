@@ -59,15 +59,53 @@ export default class ImageSelector extends React.Component<Props, State> {
 
 
     pickProfile = async () => {
-        const result: any = await DocumentPicker.getDocumentAsync({type: "image/*"});
+        this.pickImage()
+        // const result: any = await DocumentPicker.getDocumentAsync({type: "image/*"});
 
+        // if (!result.cancelled) {
+        //     if (result.uri !== undefined) {
+        //         const PP: any = {
+        //             // `uri` can also be a file system path (i.e. file://)
+        //             uri: result.uri,
+        //             name: result.name,
+        //             type: "*/*"
+        //         }
+        //         this.props.image(PP)
+        //         this.setState({PP})
+        //     } else {
+        //         if (Platform.OS !== 'ios') {
+        //             Toast.show("Upload canceled by user!", Toast.CENTER)
+        //         } else {
+        //             alert("Upload canceled by user!")
+        //         }
+        //     }
+        // } else {
+        //     if (Platform.OS !== 'ios') {
+        //         Toast.show("File upload error", Toast.CENTER)
+        //     } else {
+        //         alert("File upload error")
+        //     }
+        // }
+    }
+    private async pickImage(){
+        // No permissions request is necessary for launching the image library
+        const result:any = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+     
+    
         if (!result.cancelled) {
             if (result.uri !== undefined) {
+                let uris=result.uri.toString();
+                uris=uris.split('/')
                 const PP: any = {
                     // `uri` can also be a file system path (i.e. file://)
                     uri: result.uri,
-                    name: result.name,
-                    type: "*/*"
+                    name: uris[uris.length-1],
+                    type: result.type
                 }
                 this.props.image(PP)
                 this.setState({PP})
@@ -85,7 +123,7 @@ export default class ImageSelector extends React.Component<Props, State> {
                 alert("File upload error")
             }
         }
-    }
+      };
 
     render() {
         return (

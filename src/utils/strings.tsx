@@ -151,7 +151,7 @@ const Strings = {
                     title: 'Zip Code',
                     label: 'ZipCode',
                     hint: 'Type your Zip Code here',
-                    type: 'default',
+                    type: 'number-pad',
                     length:5
                 },
             ],

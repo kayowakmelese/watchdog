@@ -7,13 +7,13 @@ import Button from "./Button";
 export interface Props {
     onLeftPress: any;
     onRightPress: any;
-    label: number;
+    label: any;
     style: any;
     onValueEdited: any;
 }
 
 interface State {
-    label: number
+    label: any
 }
 
 export default class Counter extends React.Component<Props, State> {
@@ -69,8 +69,10 @@ export default class Counter extends React.Component<Props, State> {
                     value={`$ ${this.state.label}`}
                     onChangeText={(value: string) => {
                         if (value.length > 2) {
-                            this.setState({label: parseInt(value.replace('$ ', ''))})
-                            this.props.onValueEdited(parseInt(value.replace('$ ', '')))
+                            let v1:any=value.includes('$ ')?value.replace('$ ',''):null
+                            console.log("warisreal",v1)
+                            this.setState({label: parseFloat(value.replace('$ ', ''))})
+                            this.props.onValueEdited(value.replace('$ ', ''))
                         } else {
                             this.setState({label: 0})
                             this.props.onValueEdited(0)

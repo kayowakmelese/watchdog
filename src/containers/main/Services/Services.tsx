@@ -6,7 +6,8 @@ import {Constants} from "../../../utils/constants";
 import ServiceItem from "../../../components/ServiceItem";
 import ServiceDetail from "./ServiceDetail";
 import Transport from "../../../api/Transport";
-import {getSecureStoreItem} from "../../../utils/CommonFunction";
+import {changeToString, getSecureStoreItem} from "../../../utils/CommonFunction";
+import moment from "moment";
 
 export interface Props {
     navigation: any
@@ -137,19 +138,23 @@ export default class Services extends React.Component<Props, State> {
         if (request.data.status) {
             await Promise.all(
                 request.data.data.map(async (item: any) => {
+                    console.log("itemdetail",item)
+
                     let itemDetail = {
                         id: item.id,
                         status: item.status,
                         startingDate: new Date(item.detail.serviceDate[0]).getDate() || item.detail.serviceDate,
                         clientName: item.profile.fullName,
-                        serviceDate: item.detail.serviceDate,
-                        pickUpAddress: item.pickupAddress.streetAddress ? `${item.pickupAddress?.streetAddress}, ${item.pickupAddress?.state}, ${item.pickupAddress?.city}` : " --- ",
+                        serviceDate:item.detail.serviceDate,
+                        pickUpAddress: item.pickupAddress.streetAddress ? `${item.pickupAddress?.streetAddress}, ${item.pickupAddress?.state}, ${item.pickupAddress?.city}` : await changeToString(item.pickupAddress.latitude,item.pickupAddress.longitude),
+                        
                         note: item.detail.description,
-                        durations: item.detail.serviceDate[0],
+                        durations:moment(item.detail.serviceDate[0]).format('MM/DD/YYYY hh:mm a'),
                         offer: '$ ' + item.hourlyOffer,
                         tip: '',
                         profile: item.profile
                     }
+                    console.log("itemdetail",itemDetail)
                     switch (item.status.toLowerCase()) {
                         case 'pending':
                             let requestPending = this.state.requestPending

@@ -10,6 +10,7 @@ export const Constants = {
     opacity: .5,
     elevation: 0,
     shadowRadius: 3.5,
+    GoogleApiKey:"AIzaSyCYmzkSmnXo6mWqSp6sMZfCZFTE5Zy5rFo",
     stateOptions: [
         {
             "id": 0,

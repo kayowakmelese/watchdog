@@ -84,7 +84,7 @@ export default class Invite extends React.Component<Props, State> {
                                     <Button key={idx} onPress={async () => {
                                         try {
                                             const result = await Share.share({
-                                                message: `\n${Settings.invite.codeLabel} : ${Settings.invite.code} \n Watch Dogg app \n https://expo.io/@mekuriyaworku/projects/Watch_Dogg`,
+                                                message: `\n${Settings.invite.codeLabel} : ${Settings.invite.code} \n Watch Dogg app \n exp://exp.host/@watchdoggapps/watchdog_EPO/--/invitationCode?invitation=${Settings.invite.code}`,
                                             });
                                             if (result.action === Share.sharedAction) {
                                                 if (result.activityType) {

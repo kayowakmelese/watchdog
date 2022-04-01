@@ -47,7 +47,7 @@ export default class EarningDetail extends React.Component<Props, State> {
     }
 
     render() {
-
+        console.log("insta",this.props.route.params)
         const {eventDetail} = this.props.route.params
         const Earnings = Strings.earnings
 

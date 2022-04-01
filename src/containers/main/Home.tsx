@@ -121,6 +121,7 @@ export default class Home extends React.Component<Props, State> {
                                             break;
 
                                     }
+                                    this.changeStatus(this.state.status[this.state.idx])
                                 }}
                                         label={this.state.status[this.state.idx].label}
                                         isLoading={false}
@@ -231,6 +232,24 @@ export default class Home extends React.Component<Props, State> {
             ).catch(err => console.log(err))
         }
     }
+    async changeStatus(value:string){
+        this.setState({
+            isLoading:true
+        })
+        
+        let token = await getSecureStoreItem('token'),
+        request = await Transport.Request.changeStatus(JSON.parse(token),value,{})
+        .finally(() => this.setState({isLoading: false}))
+        .catch((error: any) => {
+            console.log(error);
+        })
+        if (request.data.status) {
+            let data = request.data?.data 
+            console.log("data5",data)
+        }   
+
+    }
+    
 }
 
 const styles = (props: any) => {

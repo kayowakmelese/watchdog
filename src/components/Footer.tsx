@@ -60,7 +60,8 @@ export default class Footer extends React.Component<Props, State> {
                 width: '100%',
                 flexDirection: 'row',
                 justifyContent: 'space-around',
-                backgroundColor: Colors.primaryColor
+                backgroundColor: Colors.primaryColor,
+                paddingBottom:10
             }}>
                 {
                     this.state.navBar.map((element: any, idx: number) => {

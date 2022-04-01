@@ -3,13 +3,15 @@ import {
     Alert,
     BackHandler,
     DeviceEventEmitter,
+    KeyboardAvoidingView,
     SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform
 } from 'react-native'
 import Colors from "../../../utils/colors";
 import {AntDesign} from "@expo/vector-icons";
@@ -132,11 +134,14 @@ export default class Pending extends React.Component<Props, State> {
         const Pending: any = Strings.home.pending
 
         return (
+            
+
             <ScrollView contentContainerStyle={{
                 flex: 1,
                 justifyContent: 'space-between'
             }} style={{backgroundColor: Colors.primaryColor,}}>
                 <SafeAreaView style={{backgroundColor: Colors.primaryColor, flex: 1}}>
+               
                     <CustomModal navigation={this.props.navigation} modalVisible={this.state.showAvailability}
                                  onRequestClose={() => this.setState({showAvailability: false})}
                                  renderView={() => {
@@ -200,7 +205,7 @@ export default class Pending extends React.Component<Props, State> {
                                          </>
                                      )
                                  }} center={false} style={{}}/>
-
+ 
                     <View style={{
                         height: 76,
                         alignItems: 'center',
@@ -212,6 +217,10 @@ export default class Pending extends React.Component<Props, State> {
                         <Text allowFontScaling={false}
                               style={{color: Colors.white, fontSize: 14}}>{Pending.message}</Text>
                     </View>
+                    <KeyboardAvoidingView
+        behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
+        style={ { flex: 1 } }
+      >
                     <Text allowFontScaling={false}
                           style={{
                               textAlign: 'center',
@@ -220,6 +229,8 @@ export default class Pending extends React.Component<Props, State> {
                               fontSize: 14
                           }}>{Pending.title}</Text>
                     <View>
+                  
+                        
                         {
                             Pending.required.map((data: any, idx: number) => {
                                 if (idx !== 4)
@@ -370,8 +381,13 @@ export default class Pending extends React.Component<Props, State> {
                                     noBorder={false}
                                     disabled={false}/>
                         }
+
                     </View>
+                    </KeyboardAvoidingView>
+
+
                 </SafeAreaView>
+             
             </ScrollView>
         );
     }

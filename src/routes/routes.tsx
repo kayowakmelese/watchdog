@@ -29,6 +29,7 @@ import linking from './linking'
 const Stack = createStackNavigator();
 
 export interface Props {
+    screen:any
 }
 
 interface State {
@@ -45,11 +46,12 @@ export default class Routes extends React.Component<Props, State> {
     }
 
     render() {
+        console.log("paramse",this.props)
         return (
             <NavigationContainer linking={linking}>
                 <Stack.Navigator initialRouteName={this.state.routeName}
                                  screenOptions={{headerShown: false, gestureEnabled: false}}>
-                    <Stack.Screen name="Intro" component={Intro}/>
+                    <Stack.Screen name="Intro" component={Intro} />
 
                     <Stack.Screen name="Auth" component={Auth}/>
                     <Stack.Screen name="Login" component={Login}/>
@@ -60,7 +62,7 @@ export default class Routes extends React.Component<Props, State> {
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="CustomCamera" component={CustomCamera}/>
 
-                    <Stack.Screen name="Main" component={Main}/>
+                    <Stack.Screen name="Main" component={Main} initialParams={{"screen":this.props.screen?this.props.screen:null}}/>
 
                     <Stack.Screen name="Home" component={Home}/>
 
